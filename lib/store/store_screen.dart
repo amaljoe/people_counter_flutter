@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:people_counter/models/activity.dart';
+import 'package:people_counter/store/components/status.dart';
 
 import 'components/activity_item.dart';
 
@@ -13,6 +14,7 @@ class _StoreScreenState extends State<StoreScreen> {
   final _firestore = FirebaseFirestore.instance;
   final _listKey = GlobalKey<AnimatedListState>();
   List<Activity> listItems = [];
+  final int startIndex = 2;
 
   @override
   void initState() {
@@ -27,6 +29,7 @@ class _StoreScreenState extends State<StoreScreen> {
           elevation: 0,
           backgroundColor: Colors.transparent,
           leading: IconButton(
+            splashRadius: Material.defaultSplashRadius / 2,
             onPressed: () {},
             icon: Icon(
               Icons.arrow_back,
@@ -81,6 +84,28 @@ class _StoreScreenState extends State<StoreScreen> {
                       ),
                     );
                   }
+                  if (snapshot.data.docs.isEmpty) {
+                    return ListView(
+                      physics: BouncingScrollPhysics(),
+                      padding: EdgeInsets.all(8),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Recent Activity',
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        Center(
+                          child: Text(
+                            'No recent Activity',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        )
+                      ],
+                    );
+                  }
                   final activity = snapshot.data.docs.first;
                   bool contains = false;
                   listItems.forEach((element) {
@@ -92,18 +117,32 @@ class _StoreScreenState extends State<StoreScreen> {
                   if (!contains) {
                     listItems.insert(0, Activity.fromSnapshot(activity));
                     if (_listKey.currentState != null) {
-                      _listKey.currentState.insertItem(0);
+                      _listKey.currentState.insertItem(startIndex);
                     }
                   }
                   return AnimatedList(
                     key: _listKey,
                     physics: BouncingScrollPhysics(),
-                    initialItemCount: listItems.length,
+                    initialItemCount: listItems.length + startIndex,
                     padding: EdgeInsets.all(8),
                     itemBuilder: (context, index, animation) {
+                      if (index == 0) {
+                        return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Status());
+                      } else if (index == 1) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Recent Activity',
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.w600),
+                          ),
+                        );
+                      }
                       return FadeTransition(
                           opacity: animation,
-                          child: ActivityItem(listItems[index]));
+                          child: ActivityItem(listItems[index - startIndex]));
                     },
                   );
                 },
@@ -118,17 +157,3 @@ class _StoreScreenState extends State<StoreScreen> {
     );
   }
 }
-
-// Column(
-// crossAxisAlignment: CrossAxisAlignment.stretch,
-// children: [
-// Padding(
-// padding: EdgeInsets.only(top: 8.0, left: 16),
-// child: Text(
-// 'Recent Activity',
-// style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-// ),
-// ),
-// Expanded(child: ActivityStream()),
-// ],
-// ),
