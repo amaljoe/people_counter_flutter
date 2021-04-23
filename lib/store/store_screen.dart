@@ -25,6 +25,7 @@ class _StoreScreenState extends State<StoreScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Color(0xFFF6FAFF),
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
