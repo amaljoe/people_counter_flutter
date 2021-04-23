@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "177445795415",
+    "firebase_url": "https://crowd-analyzer-b6574-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "crowd-analyzer-b6574",
+    "storage_bucket": "crowd-analyzer-b6574.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177445795415:android:6090389f08114d72211512",
+        "android_client_info": {
+          "package_name": "com.amaljoe.people_counter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "177445795415-oj8pioudmn8s14i5jhihh1t5dmtd1cg4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVNNyoC03PEgYX8Coj1r796OJRcLxuXJE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "177445795415-oj8pioudmn8s14i5jhihh1t5dmtd1cg4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
