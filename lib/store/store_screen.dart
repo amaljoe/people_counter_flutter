@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:people_counter/store/components/activity_stream.dart';
+import 'package:people_counter/models/activity.dart';
+
+import 'components/activity_item.dart';
 
 class StoreScreen extends StatefulWidget {
   @override
@@ -7,9 +10,12 @@ class StoreScreen extends StatefulWidget {
 }
 
 class _StoreScreenState extends State<StoreScreen> {
+  final _firestore = FirebaseFirestore.instance;
+  final _listKey = GlobalKey<AnimatedListState>();
+  List<Activity> listItems = [];
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -17,35 +23,80 @@ class _StoreScreenState extends State<StoreScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          leading: IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            leading: IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+              ),
+            ),
+            title: Text(
+              'Margin Free',
+              style: TextStyle(
+                fontSize: 24,
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
-          title: Text(
-            'Margin Free',
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Recent Activity',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-            ),
-            ActivityStream(),
-          ],
-        ),
-      ),
+          body: StreamBuilder<QuerySnapshot>(
+            stream: _firestore
+                .collection('activity')
+                .orderBy('time', descending: true)
+                .limit(1)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+              final activity = snapshot.data.docs.first;
+              bool contains = false;
+              listItems.forEach((element) {
+                if (element.id == activity.id) {
+                  contains = true;
+                  return;
+                }
+              });
+              if (!contains) {
+                listItems.insert(0, Activity.fromSnapshot(activity));
+                if (_listKey.currentState != null) {
+                  _listKey.currentState.insertItem(0);
+                }
+              }
+              return AnimatedList(
+                key: _listKey,
+                physics: BouncingScrollPhysics(),
+                initialItemCount: listItems.length,
+                padding: EdgeInsets.all(8),
+                itemBuilder: (context, index, animation) {
+                  return FadeTransition(
+                      opacity: animation,
+                      child: ActivityItem(listItems[index]));
+                },
+              );
+            },
+          )),
     );
   }
 }
+
+// Column(
+// crossAxisAlignment: CrossAxisAlignment.stretch,
+// children: [
+// Padding(
+// padding: EdgeInsets.only(top: 8.0, left: 16),
+// child: Text(
+// 'Recent Activity',
+// style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+// ),
+// ),
+// Expanded(child: ActivityStream()),
+// ],
+// ),

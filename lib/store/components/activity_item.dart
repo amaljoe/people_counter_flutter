@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:people_counter/models/activity.dart';
 import 'package:people_counter/utils/constants.dart';
 
 class ActivityItem extends StatelessWidget {
-  final bool left;
-  final DateTime time;
-  final int num;
+  final Activity activity;
 
-  const ActivityItem({
-    this.left = false,
-    @required this.num,
-    @required this.time,
+  const ActivityItem(
+    this.activity, {
     Key key,
   }) : super(key: key);
 
@@ -21,12 +18,12 @@ class ActivityItem extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-                color: left ? kLightRed : kLightBlue,
+                color: activity.left ? kLightRed : kLightBlue,
                 borderRadius: BorderRadius.all(Radius.circular(20))),
             padding: EdgeInsets.all(10),
             child: Icon(
               Icons.directions_walk_rounded,
-              color: left ? kRed : kBlue,
+              color: activity.left ? kRed : kBlue,
               size: 40,
             ),
           ),
@@ -37,9 +34,9 @@ class ActivityItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  num.toString() +
-                      (num == 1 ? ' person ' : ' people ') +
-                      (left ? 'left' : 'entered') +
+                  activity.num.toString() +
+                      (activity.num == 1 ? ' person ' : ' people ') +
+                      (activity.left ? 'left' : 'entered') +
                       ' the store',
                   style: TextStyle(fontSize: 18, height: 1.1),
                 ),
@@ -53,8 +50,8 @@ class ActivityItem extends StatelessWidget {
               Icon(Icons.schedule_rounded),
               SizedBox(height: 4),
               Text(
-                '${time.hour % 12}:${time.minute} ' +
-                    (time.hour > 12 ? 'PM' : 'AM'),
+                '${activity.time.hour % 12}:${activity.time.minute > 9 ? activity.time.minute : '0' + activity.time.minute.toString()} ' +
+                    (activity.time.hour > 12 ? 'PM' : 'AM'),
                 style: TextStyle(fontSize: 14),
               )
             ],
