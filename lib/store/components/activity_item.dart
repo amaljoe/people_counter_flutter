@@ -3,7 +3,7 @@ import 'package:people_counter/utils/constants.dart';
 
 class ActivityItem extends StatelessWidget {
   final bool left;
-  final String time;
+  final DateTime time;
   final int num;
 
   const ActivityItem({
@@ -53,7 +53,8 @@ class ActivityItem extends StatelessWidget {
               Icon(Icons.schedule_rounded),
               SizedBox(height: 4),
               Text(
-                '3:15 PM',
+                '${time.hour % 12}:${time.minute} ' +
+                    (time.hour > 12 ? 'PM' : 'AM'),
                 style: TextStyle(fontSize: 14),
               )
             ],

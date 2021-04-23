@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-import 'components/activity_item.dart';
+import 'package:people_counter/store/components/activity_stream.dart';
 
 class StoreScreen extends StatefulWidget {
   @override
@@ -9,8 +7,6 @@ class StoreScreen extends StatefulWidget {
 }
 
 class _StoreScreenState extends State<StoreScreen> {
-  final _firestore = FirebaseFirestore.instance;
-
   @override
   void initState() {
     // TODO: implement initState
@@ -46,11 +42,7 @@ class _StoreScreenState extends State<StoreScreen> {
               'Recent Activity',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
             ),
-            ActivityItem(
-              num: 2,
-              left: false,
-              time: '3:15 PM',
-            )
+            ActivityStream(),
           ],
         ),
       ),
