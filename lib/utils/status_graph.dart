@@ -60,12 +60,7 @@ class StatusGraph {
         upper = pt.inside;
       }
     });
-    upper = upper ~/ 5 * 5;
-    if (upper > 0) {
-      upper += upper ~/ 2;
-    } else {
-      upper += 5;
-    }
+    upper = upper ~/ 5 * 5 + 5;
   }
 
   static String getFormattedTime(DateTime time) {
