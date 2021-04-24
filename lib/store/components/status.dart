@@ -28,7 +28,7 @@ class _StatusState extends State<Status> {
       stream: _firestore
           .collection('status')
           .orderBy('time', descending: true)
-          .endBefore([DateTime.now().add(Duration(hours: 5, minutes: 27))])
+          .endBefore([DateTime.now().add(Duration(hours: 5, minutes: 20))])
           .limit(11)
           .snapshots(),
       builder: (context, snapshot) {
@@ -40,7 +40,7 @@ class _StatusState extends State<Status> {
           );
         }
         print(snapshot.data.docs.length);
-        if (snapshot.data.docs.isEmpty) {
+        if (snapshot.data.docs.length < 2) {
           return Center(
             child: Text(
               'Not enough data',
@@ -158,7 +158,7 @@ class _StatusState extends State<Status> {
       maxY: 6,
       lineBarsData: [
         LineChartBarData(
-          preventCurveOverShooting: true,
+          preventCurveOverShooting: false,
           spots: statusGraph.spots,
           isCurved: true,
           colors: gradientColors,
