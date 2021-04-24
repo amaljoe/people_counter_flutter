@@ -7,7 +7,7 @@ import 'package:people_counter/splash_screen.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: Color(0xFF)));
+      SystemUiOverlayStyle(statusBarColor: Color(0xff232d37)));
   runApp(MyApp());
 }
 

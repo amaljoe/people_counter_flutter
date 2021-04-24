@@ -141,9 +141,12 @@ class _StoreScreenState extends State<StoreScreen> {
                           ),
                         );
                       }
-                      return FadeTransition(
-                          opacity: animation,
-                          child: ActivityItem(listItems[index - startIndex]));
+                      return SizeTransition(
+                        sizeFactor: animation,
+                        child: FadeTransition(
+                            opacity: animation,
+                            child: ActivityItem(listItems[index - startIndex])),
+                      );
                     },
                   );
                 },

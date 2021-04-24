@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:people_counter/models/activity.dart';
 import 'package:people_counter/utils/constants.dart';
+import 'package:people_counter/utils/status_graph.dart';
 
 class ActivityItem extends StatelessWidget {
   final Activity activity;
@@ -50,8 +51,7 @@ class ActivityItem extends StatelessWidget {
               Icon(Icons.schedule_rounded),
               SizedBox(height: 4),
               Text(
-                '${activity.time.hour % 12}:${activity.time.minute > 9 ? activity.time.minute : '0' + activity.time.minute.toString()} ' +
-                    (activity.time.hour > 12 ? 'PM' : 'AM'),
+                StatusGraph.getFormattedTime(activity.time),
                 style: TextStyle(fontSize: 14),
               )
             ],

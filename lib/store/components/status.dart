@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:people_counter/models/status_point.dart';
+import 'package:people_counter/utils/status_graph.dart';
 
 class Status extends StatefulWidget {
   @override
@@ -16,12 +18,18 @@ class _StatusState extends State<Status> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: _firestore
           .collection('status')
           .orderBy('time', descending: true)
-          .limit(5)
+          .endBefore([DateTime.now().add(Duration(hours: 5, minutes: 27))])
+          .limit(11)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -31,40 +39,55 @@ class _StatusState extends State<Status> {
             ),
           );
         }
+        print(snapshot.data.docs.length);
         if (snapshot.data.docs.isEmpty) {
           return Center(
             child: Text(
-              'Something went wrong',
+              'Not enough data',
               style: TextStyle(fontSize: 18),
             ),
           );
         }
-        final status = snapshot.data.docs.first;
-        final int inside = status['inside'];
-        return AspectRatio(
-          aspectRatio: 1.70,
-          child: Container(
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(18),
-                ),
-                color: Color(0xff232d37)),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  right: 18.0, left: 12.0, top: 24, bottom: 12),
-              child: LineChart(
-                mainData(),
-                swapAnimationDuration: Duration(milliseconds: 150), // Optional
-                swapAnimationCurve: Curves.linear, // Optional
+        List<StatusPoint> statusPoints = [];
+        snapshot.data.docs.forEach((doc) {
+          final pt = StatusPoint.fromSnapshot(doc);
+          statusPoints.add(pt);
+        });
+        final statusGraph = StatusGraph(statusPoints: statusPoints, max: max);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Number of people in the store: ${statusPoints.first.inside}',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
             ),
-          ),
+            AspectRatio(
+              aspectRatio: 1.70,
+              child: Container(
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(18),
+                    ),
+                    color: Color(0xff232d37)),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      right: 18.0, left: 12.0, top: 24, bottom: 12),
+                  child: LineChart(
+                    mainData(statusGraph), // Optional
+                  ),
+                ),
+              ),
+            ),
+          ],
         );
       },
     );
   }
 
-  LineChartData mainData() {
+  LineChartData mainData(StatusGraph statusGraph) {
     return LineChartData(
       gridData: FlGridData(
         show: true,
@@ -94,11 +117,11 @@ class _StatusState extends State<Status> {
           getTitles: (value) {
             switch (value.toInt()) {
               case 2:
-                return 'MAR';
+                return statusGraph.yAxis[0];
               case 5:
-                return 'JUN';
+                return statusGraph.yAxis[1];
               case 8:
-                return 'SEP';
+                return statusGraph.yAxis[2];
             }
             return '';
           },
@@ -114,11 +137,11 @@ class _StatusState extends State<Status> {
           getTitles: (value) {
             switch (value.toInt()) {
               case 1:
-                return '10k';
+                return statusGraph.xAxis[0];
               case 3:
-                return '30k';
+                return statusGraph.xAxis[1];
               case 5:
-                return '50k';
+                return statusGraph.xAxis[2];
             }
             return '';
           },
@@ -135,15 +158,8 @@ class _StatusState extends State<Status> {
       maxY: 6,
       lineBarsData: [
         LineChartBarData(
-          spots: [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
-          ],
+          preventCurveOverShooting: true,
+          spots: statusGraph.spots,
           isCurved: true,
           colors: gradientColors,
           barWidth: 5,
