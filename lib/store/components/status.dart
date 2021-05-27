@@ -158,7 +158,7 @@ class _StatusState extends State<Status> {
       maxY: 6,
       lineBarsData: [
         LineChartBarData(
-          preventCurveOverShooting: false,
+          preventCurveOverShooting: true,
           spots: statusGraph.spots,
           isCurved: true,
           colors: gradientColors,
