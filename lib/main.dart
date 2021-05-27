@@ -4,11 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:people_counter/home/home_screen.dart';
 import 'package:people_counter/splash_screen.dart';
-import 'package:people_counter/store/store_screen.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: Color(0xff232d37)));
+      SystemUiOverlayStyle(statusBarColor: Colors.white));
   runApp(MyApp());
 }
 

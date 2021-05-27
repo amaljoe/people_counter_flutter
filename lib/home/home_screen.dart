@@ -15,14 +15,6 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        leading: IconButton(
-          splashRadius: Material.defaultSplashRadius / 2,
-          onPressed: () {},
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-        ),
         title: Text(
           'Home',
           style: TextStyle(
