@@ -2,8 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:people_counter/Store/store_screen.dart';
+import 'package:people_counter/home/home_screen.dart';
 import 'package:people_counter/splash_screen.dart';
+import 'package:people_counter/store/store_screen.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
@@ -41,7 +42,7 @@ class _MyAppState extends State<MyApp> {
             }
             // Once complete, show your application
             if (snapshot.connectionState == ConnectionState.done) {
-              return StoreScreen();
+              return HomeScreen();
             }
             // Otherwise, show something whilst waiting for initialization to complete
             return SplashScreen();
