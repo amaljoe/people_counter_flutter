@@ -29,8 +29,15 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: EdgeInsets.all(16.0),
           child: Column(
             children: [
-              StoreItem(id: 1, name: "Store 1", offers: ['get 3 shoes for 1']),
-              StoreItem(id: 2, name: "Store 2", offers: ['get 4 shoes for 1']),
+              StoreItem(id: 1, name: "Store 1", offers: [
+                'Upto 20% off for laundry essentials',
+                'get something for something',
+                'Buy 2l bottle of pepsi get 750ml free'
+              ]),
+              StoreItem(id: 2, name: "Store 2", offers: [
+                'Buy 1 get 1 offer on 1L pack of Tropicana mango juice',
+                '2 masks free with a box of 10 surgical masks',
+              ]),
             ],
           ),
         ),

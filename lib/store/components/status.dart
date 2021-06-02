@@ -55,6 +55,7 @@ class _StatusState extends State<Status> {
           );
         }
         final status = StatusPoint.fromSnapshot(snapshot.data.docs.first);
+        status.inside = 25;
         return Stack(
           children: [
             Container(
@@ -72,6 +73,18 @@ class _StatusState extends State<Status> {
                 ),
               ),
             ),
+            Positioned.fill(
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: status.inside > max - 10
+                        ? Text(
+                            'Densely crowded',
+                            style: TextStyle(fontSize: 24, color: kRed),
+                          )
+                        : Text(
+                            'Not crowded',
+                            style: TextStyle(fontSize: 24, color: Colors.green),
+                          )))
           ],
         );
       },
